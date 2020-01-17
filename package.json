@@ -1,0 +1,27 @@
+{
+  "name": "adonis-connector",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy": "bash build/copy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yariksav/adonis-connector.git"
+  },
+  "author": "Yarolsav Savaryn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yariksav/adonis-connector/issues"
+  },
+  "homepage": "https://github.com/yariksav/adonis-connector#readme",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "promiseo": "^0.1.2",
+    "require-all": "^3.0.0",
+    "vue": "^2.6.11",
+    "vue-i18n": "^8.15.3"
+  }
+}
