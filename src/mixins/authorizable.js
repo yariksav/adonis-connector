@@ -1,7 +1,7 @@
 module.exports = {
   created () {
     this.registerWaitFor(() => {
-      return !!this.$options.user || this.auth.check()
+      return Boolean(this.userInstance) || this.auth.check()
     })
   },
   computed: {

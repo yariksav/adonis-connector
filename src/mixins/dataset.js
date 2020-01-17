@@ -5,7 +5,11 @@ const promiseo = require('promiseo')
 const { isFunction, checkVisibility, isPromise } = require('./base/utils')
 
 module.exports = {
-  mixins: [baseMixin, contextable],
+  mixins: [
+    baseMixin,
+    contextable
+  ],
+
   methods: {
     async renderData (fields, items) {
       if (Array.isArray(fields)) {
@@ -45,6 +49,7 @@ module.exports = {
       }
       return data
     },
+
     async $$load () {
       let data = await this.load()
       let total

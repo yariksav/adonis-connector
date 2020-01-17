@@ -1,9 +1,3 @@
-
-const Component = require('./Component')
-const { get } = require('lodash')
-const { join } = require('path')
-const requireAll = require('require-all')
-const Vue = require('vue')
 'use strict'
 /**
  * adonis-connector
@@ -11,6 +5,13 @@ const Vue = require('vue')
  * @license MIT
  * @copyright Yaroslav Savaryn - <yariksav@gmail.com>
  */
+
+const Component = require('./Component')
+const { get } = require('lodash')
+const { existsSync } = require('fs')
+const { join,  } = require('path')
+const requireAll = require('require-all')
+const Vue = require('vue')
 
 class Connector {
   constructor (Config) {
@@ -25,9 +26,25 @@ class Connector {
     if (path) {
       this.components = requireAll({
         dirname: path,
-        excludeDirs:  /^(mixins|src)$/,
+        excludeDirs:  /^(Mixins|mixins)$/,
         recursive: true
       })
+
+      if (existsSync(path + '/Mixins/')) {
+        this._localMixins = requireAll({
+          dirname: path + '/Mixins/'
+        })
+        if (this._localMixins) {
+          for (const key in this._localMixins) {
+            const mixin = this._localMixins[key]
+            mixin.mixins && this._prepareMixins(mixin.mixins)
+          }
+          this._mixins = {
+            ...this._mixins,
+            ...this._localMixins
+          }
+        }
+      }
     }
 
     if (messagesPath) {
@@ -36,6 +53,7 @@ class Connector {
         recursive: true
       })
     }
+
     if (this.messages) {
       const VueI18n = require('vue-i18n')
       Vue.use(VueI18n)
@@ -43,6 +61,14 @@ class Connector {
         locale: 'en',
         messages: this.messages
       })
+    }
+  }
+
+  _prepareMixins (mixins) {
+    for (const index in (mixins || [])) {
+      if (typeof mixins[index] === 'string') {
+        mixins[index] = this.mixin(mixins[index])
+      }
     }
   }
 
@@ -70,9 +96,7 @@ class Connector {
     }
     if (component.mixins) {
       for (const index in component.mixins) {
-        if (typeof component.mixins[index] === 'string') {
-          component.mixins[index] = this.mixin(component.mixins[index])
-        }
+        this._prepareMixins(component.mixins)
       }
     }
     return new Component(component, this)

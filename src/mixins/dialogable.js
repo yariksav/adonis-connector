@@ -1,7 +1,7 @@
 const { validate } = use('Validation')
 const { pick, pickBy } = require('lodash')
 const promiseo = require('promiseo')
-const { isFunction, checkVisibility, isPromise } = require('./utils')
+const { isFunction, checkVisibility, isPromise } = require('./base/utils')
 const contextable = require('./base/contextable')
 const baseMixin = require('./base/baseMixin')
 const primaryKey = require('./primaryKey')()
@@ -95,6 +95,9 @@ module.exports = {
     },
 
     async $$delete () {
+      if (!isFunction(this.delete)) {
+        throw new Error('You can\'t delete in this component')
+      }
       await this.delete()
     }
   }

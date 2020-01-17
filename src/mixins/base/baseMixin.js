@@ -1,19 +1,13 @@
 const waitForPromises = require('./waitForPromises')
+const asyncData = require('./asyncData')
+
 module.exports = {
-  mixins: [waitForPromises],
-  computed: {
-    // context () {
-    //   return this.$options.context.auth
-    // },
-    // request () {
-    //   return this.$options.context.request
-    // },
-  },
+  mixins: [
+    waitForPromises,
+    asyncData
+  ],
   methods: {
     async $run (action) {
-      if (this.$options.asyncData) {
-        await this.$options.asyncData.call(this)
-      }
       await this.waitForPromises()
       const method = '$$' + (action || this.$options.action)
       return this[method] && this[method]()
