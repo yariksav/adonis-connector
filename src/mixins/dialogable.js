@@ -79,7 +79,6 @@ module.exports = {
       const controls = await promiseo.call(this, this.controls, { deep: true })
       const res = await this.renderData(controls, this.model)
       return {
-        tabs: this.tabs,
         title: this.title,
         rules: this.rules,
         description: this.description,

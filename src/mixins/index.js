@@ -1,17 +1,17 @@
 const Dialog = require('./dialogable')
-const Confirm = require('./confirmable')
+const Confirmable = require('./confirmable')
 const Auth = require('./authorizable')
 const DataSet = require('./dataset')
-const Pagination = require('./pagination')
+const Paginatable = require('./pagination')
 const PrimaryKey = require('./primaryKey')
 const Base = require('./base/baseMixin')
 
 module.exports = {
-  Dialog,
-  Confirm,
-  DataSet,
-  Pagination,
-  Auth,
   Base,
-  PrimaryKey
+  Dialog,
+  DataSet,
+  PrimaryKey,
+  Auth,
+  Confirmable,
+  Paginatable,
 }
