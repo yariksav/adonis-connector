@@ -1,12 +1,18 @@
 module.exports = {
   created () {
-    this.registerWaitFor(() => {
-      return Boolean(this.userInstance) || this.auth.check()
+    this.beforeInit(() => {
+      if (this.user) {
+        return true
+      }
+      if (!this.auth) {
+        throw new Error('E_AUTH_USER_NOT_DEFIGNED')
+      }
+      return this.auth.check()
     })
   },
   computed: {
-    userInstance () {
-      return this.$options.user || this.auth.user
+    user () {
+      return this.$options.user || (this.auth && this.auth.user)
     }
   }
 }

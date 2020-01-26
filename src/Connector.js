@@ -9,9 +9,26 @@
 const Component = require('./Component')
 const { get } = require('lodash')
 const { existsSync } = require('fs')
-const { join,  } = require('path')
+const { join } = require('path')
 const requireAll = require('require-all')
 const Vue = require('vue')
+
+const proxyHandler = {
+  get (target, name) {
+    if (typeof (name) === 'symbol' || name === 'inspect') {
+      return target[name]
+    }
+    if (target[name]) {
+      return target[name]
+    }
+    // if (typeof target[name] === 'function') {
+    //   return targer[name]
+    // }
+    // return async (params, context) => {
+    //   return target.run(name, params, context)
+    // }
+  }
+}
 
 class Connector {
   constructor (Config) {
@@ -62,6 +79,7 @@ class Connector {
         messages: this.messages
       })
     }
+    return new Proxy(this, proxyHandler)
   }
 
   _prepareMixins (mixins) {

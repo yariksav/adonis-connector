@@ -1,13 +1,18 @@
 module.exports = {
   beforeCreate () {
     this.promisesForWait = []
+    this.promisesAfterInit = []
   },
   methods: {
-    registerWaitFor (fn) {
+    beforeInit (fn) {
       this.promisesForWait.push(fn())
     },
-    waitForPromises () {
-      return this.promisesForWait.length && Promise.all(this.promisesForWait)
+    async waitForPromises () {
+      this.promisesForWait.length && await Promise.all(this.promisesForWait)
+      this.promisesAfterInit.length && await Promise.all(this.promisesAfterInit.map(item => item()))
+    },
+    afterInit (fn) {
+      this.promisesAfterInit.push(fn)
     }
   }
 }

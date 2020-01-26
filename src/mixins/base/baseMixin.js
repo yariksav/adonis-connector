@@ -7,10 +7,10 @@ module.exports = {
     asyncData
   ],
   methods: {
-    async $run (action) {
+    async $run (action, params) {
       await this.waitForPromises()
       const method = '$$' + (action || this.$options.action)
-      return this[method] && this[method]()
+      return this[method] && this[method](params)
     }
   }
 }

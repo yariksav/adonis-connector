@@ -1,11 +1,5 @@
 const crypto = require('crypto')
-const GraphQLError = require('adonis-graphql-extra/src/Errors')
-
-class ConfirmException extends GraphQLError {
-  constructor (data) {
-    super('E_CONFIRM_EXCEPTION', data)
-  }
-}
+const ConfirmException = require('../exceptions/ConfirmException')
 
 module.exports = {
   props: {

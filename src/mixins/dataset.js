@@ -61,7 +61,7 @@ module.exports = {
       }
       const items = await this.renderData(this.fields, data)
       return {
-        total,
+        total: total || items.length,
         items,
         ...(await promiseo.call(this, this.response))
       }

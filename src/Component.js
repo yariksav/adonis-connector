@@ -7,8 +7,8 @@
  */
 
 const Vue = require('vue')
-const debugreq = require('debug')('dialog:request')
-const debugrsp = require('debug')('dialog:response')
+const debugreq = require('debug')('connector:request')
+const debugrsp = require('debug')('connector:response')
 
 const proxyHandler = {
   get (target, name) {
@@ -37,7 +37,10 @@ class Component {
     debugreq('%s:%s %o', '', action, params)
     const date = new Date()
     const vm = new this.Ctor({ ...this.connector.context, ...context, propsData: { ...params }, action  })
-    const res = await vm.$run(action)
+    if (!vm['$$' + action]) {
+      throw new Error(`Method ${action} doesn't exisit`)
+    }
+    const res = await vm.$run(action, params)
     vm.$destroy()
     debugrsp('%o %s', res, new Date() - date)
     return res

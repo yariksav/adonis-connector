@@ -9,6 +9,7 @@
 
 const { ServiceProvider } = require('@adonisjs/fold')
 const Connector = require('../src/Connector')
+const ConnectorException = require('../src/exceptions/ConnectorException')
 
 class ConnectorProvider extends ServiceProvider {
   /**
@@ -18,6 +19,7 @@ class ConnectorProvider extends ServiceProvider {
    * @return {void}
    */
   _registerConnector () {
+    this.app.bind('App/Exceptions/ConnectorException', ConnectorException)
     this.app.singleton('Adonis/Addons/Connector', (app) => {
       const Config = app.use('Adonis/Src/Config')
       const Connector = require('../src/Connector')

@@ -9,7 +9,16 @@ const primaryKey = require('./primaryKey')()
 module.exports = {
   mixins: [baseMixin, contextable, primaryKey],
   props: {
+    id: [Number, String],
     inputs: Object
+  },
+  computed: {
+    primaryKey () {
+      return 'id'
+    },
+    isNew () {
+      return !this[this.primaryKey]
+    }
   },
   methods: {
     validate (inputs, rules) {
@@ -65,7 +74,7 @@ module.exports = {
         }
         delete control.default
         delete control.value
-        if (typeof control === 'object') {
+        if (typeof control === 'object' && Object.keys(control).length) {
           controlsOptions[key] = control
         }
       }
@@ -73,6 +82,15 @@ module.exports = {
         data,
         controls: controlsOptions
       }
+    },
+
+    async $$get () {
+      if (!this.model || this.model.isNew) {
+        return null
+      }
+      const controls = await promiseo.call(this, this.controls, { deep: true })
+      const res = await this.renderData(controls, this.model)
+      return res.data
     },
 
     async $$load () {
