@@ -4,10 +4,8 @@ const promiseo = require('promiseo')
 const { isFunction, checkVisibility, isPromise } = require('./base/utils')
 const contextable = require('./base/contextable')
 const baseMixin = require('./base/baseMixin')
-const primaryKey = require('./primaryKey')()
-
 module.exports = {
-  mixins: [baseMixin, contextable, primaryKey],
+  mixins: [baseMixin, contextable],
   props: {
     id: [Number, String],
     inputs: Object

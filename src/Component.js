@@ -9,6 +9,9 @@
 const Vue = require('vue')
 const debugreq = require('debug')('connector:request')
 const debugrsp = require('debug')('connector:response')
+Vue.config.devtools = false
+Vue.config.productionTip = false
+Vue.config.silent = process.env.ENV_MODE === 'development'
 
 const proxyHandler = {
   get (target, name) {
