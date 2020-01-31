@@ -10,8 +10,7 @@ module.exports = {
   mixins: [baseMixin, contextable, api],
 
   props: {
-    id: [Number, String],
-    inputs: Object
+    id: [Number, String]
   },
   computed: {
     primaryKey () {
@@ -32,18 +31,8 @@ module.exports = {
       }, {})
     },
 
-    async $$get () {
-      if (!this.model || this.model.isNew) {
-        return null
-      }
-      const controls = await promiseo.call(this, this.controls, { deep: true })
-      const res = await this.renderData(controls, this.model)
-      return res.data
-    },
-
     async $$load () {
       const controls = await promiseo.call(this, this.controls, { deep: true })
-      const res = await this.renderData(controls, this.model)
       return {
         title: this.title,
         rules: this.rules,
@@ -57,7 +46,9 @@ module.exports = {
     async $$save () {
       const fn = isFunction(this.save) ? 'save' : (this.isNew ? 'create' : 'update')
       isFunction(this[fn]) && await this[fn]()
-      return this.renderData(this.controls, this.model)
+      return {
+        data: await this.renderData(this.controls, this.model)
+      }
     },
 
     async $$delete () {

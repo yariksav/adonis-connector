@@ -21,12 +21,6 @@ const proxyHandler = {
     if (target[name]) {
       return target[name]
     }
-    // if (typeof target[name] === 'function') {
-    //   return targer[name]
-    // }
-    // return async (params, context) => {
-    //   return target.run(name, params, context)
-    // }
   }
 }
 

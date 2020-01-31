@@ -22,9 +22,8 @@ module.exports = {
     getAllowedInputs () {
       // todo move controls to cache and check async?
       const res = {}
-      const controls = isFunction(this.controls) ? this.controls() : this.controls
-      for (const key in controls) {
-        const control = controls[key]
+      for (const key in this.controls) {
+        const control = this.controls[key]
         const disabled = isFunction(control.disabled) ? control.disabled() : control.disabled
         const readonly = isFunction(control.readonly) ? control.readonly() : control.readonly
         if (checkVisibility(control) && !disabled && !readonly) {

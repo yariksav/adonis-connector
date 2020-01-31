@@ -39,7 +39,14 @@ class Component {
   async run (action, params, context) {
     debugreq('%s:%s %o', '', action, params)
     const date = new Date()
-    const vm = new this.Ctor({ ...this.connector.context, ...context, propsData: { ...params }, action  })
+    const vm = new this.Ctor({
+      connectorConstructor: this.connector,
+      ...this.connector.context,
+      ...context,
+      propsData: { ...params },
+      action
+    })
+
     if (!vm['$$' + action]) {
       throw new Error(`Method ${action} doesn't exisit`)
     }

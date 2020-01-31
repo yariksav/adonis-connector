@@ -1,7 +1,9 @@
 
 module.exports = {
   created () {
-    this.$i18n.locale = this.request ? this.request.header('language') : 'en'
+    if (this.$i18n) {
+      this.$i18n.locale = this.request ? this.request.header('language') : 'en'
+    }
   },
 
   computed: {
