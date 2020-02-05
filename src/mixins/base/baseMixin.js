@@ -21,7 +21,9 @@ module.exports = {
 const proxyHandler = {
   get (target, action) {
     return function(params, options) {
-      console.log(action, target.name, params, Object.keys(target.parent.$options))
+      if (typeof (action) === 'symbol' || action === 'inspect') {
+        return target[action]
+      }
       return target.parent.$options.connectorConstructor.component(target.name)[action](params, {
         request: target.parent.$options.request,
         auth: target.parent.$options.auth,

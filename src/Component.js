@@ -48,7 +48,7 @@ class Component {
     })
 
     if (!vm['$$' + action]) {
-      throw new Error(`Method ${action} doesn't exisit`)
+      throw new Error(`Method ${action} doesn't exist`)
     }
     const res = await vm.$run(action, params)
     vm.$destroy()
