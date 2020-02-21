@@ -11,43 +11,43 @@ module.exports = {
   ],
 
   methods: {
-    async renderData (fields, items) {
-      if (Array.isArray(fields)) {
-        fields = fields.reduce((obj, item) => { // eslint-disable-line
-          obj[item] = true
-          return obj
-        }, {})
-      }
-      const data = []
-      for (const model of items) {
-        const item = {}
-        for (const key in fields) {
-          let field = fields[key]
-          if ([String, Number, Array, Object].includes(field)) {
-            field = {
-              type: field
-            }
-          }
-          if (!checkVisibility(field)) {
-            continue
-          }
-          item[key] = isFunction(field) ? field : (field.value || model[key])
-          if (item[key] === undefined) {
-            item[key] = field.default || null
-          }
-          if (isFunction(item[key])) {
-            item[key] = item[key].call(this, model)
-          }
-          if (isPromise(item[key])) {
-            item[key] = await item[key]
-          }
-          if (isFunction(field.type)) {
-            item[key] = field.type(item[key])
+    async renderItem (fields, model) {
+      const item = {}
+      for (const key in fields) {
+        let field = fields[key]
+        if ([String, Number, Array, Object].includes(field)) {
+          field = {
+            type: field
           }
         }
-        data.push(item)
+        if (!checkVisibility(field)) {
+          continue
+        }
+        item[key] = isFunction(field) ? field : (field.value || model[key])
+        if (item[key] === undefined) {
+          item[key] = field.default || null
+        }
+        if (isFunction(item[key])) {
+          item[key] = item[key].call(this, model)
+        }
+        if (isPromise(item[key])) {
+          item[key] = await item[key]
+        }
+        if (isFunction(field.type)) {
+          item[key] = field.type(item[key])
+        }
       }
-      return data
+      return item
+    },
+
+    async renderData (fields, items) {
+      // if (Array.isArray(fields)) {
+      //   fields = fields.reduce((obj, item) => { // eslint-disable-line
+      //     obj[item] = true
+      //     return obj
+      //   }, {})
+      // }
+      return Promise.all(items.map(item => this.renderItem(fields, item)))
     },
 
     async $$load () {
