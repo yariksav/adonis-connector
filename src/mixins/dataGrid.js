@@ -1,14 +1,17 @@
 const { get } = require('lodash')
-const dataSet = require('./dataset')
+const dataSet = require('./dataSet')
 
 module.exports = {
   mixins: [
     dataSet
   ],
+  props: {
+    schema: Boolean
+  },
   methods: {
     renderColumns (fields) {
       return Object.keys(fields)
-        .filter(item => typeof fields[item] === 'object' && (fields[item].component || fields[item].text))
+        .filter(item => typeof fields[item] === 'object' && (fields[item].component || fields[item].text !== undefined))
         .map(item => {
           delete fields[item].value
           fields[item].value = item
@@ -24,15 +27,19 @@ module.exports = {
         }
         data = data.rows
       }
-      const items = await this.renderData(this.fields, data)
-      const columns = await this.renderColumns(this.fields)
-      return {
-        total: total || items.length,
-        items,
-        columns,
-        actions: this.actions,
-        options: this.options || {}
+      const res = {
+        data: await this.renderData(this.fields, data),
       }
+      res.total = total || res.data.length
+
+      if (this.schema) {
+        res.schema = {
+          columns: await this.renderColumns(this.fields),
+          actions: this.actions,
+          ...this.options
+        }
+      }
+      return res
     }
   }
 }

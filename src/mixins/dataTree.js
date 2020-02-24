@@ -1,4 +1,4 @@
-const dataSet = require('./dataset')
+const dataSet = require('./dataSet')
 
 module.exports = {
   mixins: [
@@ -68,7 +68,7 @@ module.exports = {
         items = this.listToTree(items)
       }
       return {
-        items: await this.renderTree(items)
+        data: await this.renderTree(items)
       }
     }
   }

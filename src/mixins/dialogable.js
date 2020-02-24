@@ -7,11 +7,17 @@ const baseMixin = require('./base/baseMixin')
 const api = require('./api')
 
 module.exports = {
-  mixins: [baseMixin, contextable, api],
+  mixins: [
+    baseMixin,
+    contextable,
+    api
+  ],
 
   props: {
-    id: [Number, String]
+    id: [Number, String],
+    schema: Boolean
   },
+
   computed: {
     primaryKey () {
       return 'id'
@@ -20,6 +26,7 @@ module.exports = {
       return !this[this.primaryKey]
     }
   },
+
   methods: {
     renderControls (controls) {
       return Object.keys(controls).reduce((acc, key) => {
@@ -32,15 +39,20 @@ module.exports = {
     },
 
     async $$load () {
-      const controls = await promiseo.call(this, this.controls, { deep: true })
-      return {
-        title: this.title,
-        rules: this.rules,
-        description: this.description,
-        actions: this.actions,
-        data: await this.renderData(controls, this.model),
-        controls: this.renderControls(controls)
+      const controls = await promiseo.call(this, this.controls, { deep: Boolean(this.schema) })
+      const res = {
+        data: await this.renderData(controls, this.model)
       }
+      if (this.schema) {
+        res.schema = {
+          title: this.title,
+          rules: this.rules,
+          description: this.description,
+          actions: this.actions,
+          controls: this.renderControls(controls)
+        }
+      }
+      return res
     },
 
     async $$save () {
@@ -56,6 +68,7 @@ module.exports = {
         throw new Error('You can\'t delete in this component')
       }
       await this.delete()
+      return true
     }
   }
 }

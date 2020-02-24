@@ -41,12 +41,6 @@ module.exports = {
     },
 
     async renderData (fields, items) {
-      // if (Array.isArray(fields)) {
-      //   fields = fields.reduce((obj, item) => { // eslint-disable-line
-      //     obj[item] = true
-      //     return obj
-      //   }, {})
-      // }
       return Promise.all(items.map(item => this.renderItem(fields, item)))
     },
 
@@ -59,12 +53,12 @@ module.exports = {
         }
         data = data.rows
       }
-      const items = await this.renderData(this.fields, data)
-      return {
-        total: total || items.length,
-        items,
+      const res = {
+        data: await this.renderData(this.fields, data),
         ...(await promiseo.call(this, this.response))
       }
+      res.total = total || res.data.length
+      return res
     }
   }
 }

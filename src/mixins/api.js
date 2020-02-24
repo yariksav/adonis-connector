@@ -3,6 +3,7 @@ const { pick, pickBy } = require('lodash')
 const { isFunction, checkVisibility, isPromise } = require('./base/utils')
 const contextable = require('./base/contextable')
 const baseMixin = require('./base/baseMixin')
+
 module.exports = {
   mixins: [baseMixin, contextable],
   props: {
@@ -48,7 +49,11 @@ module.exports = {
         if (!checkVisibility(control)) {
           continue
         }
-        data[key] = isFunction(control) ? control : (control.value !== undefined ? control.value : model[key])
+        if (isFunction(control) || ['number', 'string'].includes(typeof control)) {
+          data[key] = control
+        } else {
+          data[key] = control.value !== undefined ? control.value : model[key]
+        }
         if (data[key] === undefined) {
           data[key] = control.default || null
         }
