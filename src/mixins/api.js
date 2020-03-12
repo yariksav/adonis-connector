@@ -68,6 +68,15 @@ module.exports = {
         }
       }
       return data
+    },
+
+    async $$load () {
+      if (!this.controls) {
+        return {}
+      }
+      return {
+        data: await this.renderData(this.controls, this.model)
+      }
     }
   }
 }

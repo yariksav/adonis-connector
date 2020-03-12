@@ -1,8 +1,8 @@
 
 class ConnectorException extends Error {
   constructor (message, state) {
+    super(message)
     this.state = state
-    super(message, data)
   }
 }
 module.exports = ConnectorException
