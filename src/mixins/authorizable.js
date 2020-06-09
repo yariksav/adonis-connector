@@ -1,3 +1,5 @@
+const GE = require('@adonisjs/generic-exceptions')
+
 module.exports = {
   created () {
     this.beforeInit(() => {
@@ -5,7 +7,7 @@ module.exports = {
         return true
       }
       if (!this.auth) {
-        throw new Error('E_AUTH_USER_NOT_DEFIGNED')
+        throw new GE.HttpException('User not defined', 401, 'E_AUTH_USER_NOT_DEFINED')
       }
       return this.auth.check()
     })

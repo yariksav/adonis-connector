@@ -4,6 +4,7 @@ const { isFunction, checkVisibility } = require('./base/utils')
 const contextable = require('./base/contextable')
 const baseMixin = require('./base/baseMixin')
 const api = require('./api')
+const GE = require('@adonisjs/generic-exceptions')
 
 module.exports = {
   mixins: [
@@ -64,7 +65,7 @@ module.exports = {
 
     async $$delete () {
       if (!isFunction(this.delete)) {
-        throw new Error('You can\'t delete in this component')
+        throw new GE.HttpException('You can\'t delete in this component', 403, 'E_CANNOT_DELETE')
       }
       await this.delete()
       return true

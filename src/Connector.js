@@ -12,6 +12,7 @@ const { existsSync } = require('fs')
 const { join } = require('path')
 const requireAll = require('require-all')
 const Vue = require('vue')
+const GE = require('@adonisjs/generic-exceptions')
 
 const proxyHandler = {
   get (target, name) {
@@ -95,7 +96,7 @@ class Connector {
       this._mixins[key] = value
     } else {
       if (!this._mixins[key]) {
-        throw new Error(`Mixin ${key} not found`)
+        throw new GE.HttpException(`Mixin ${key} not found`, 404)
       }
       return this._mixins[key]
     }
@@ -104,7 +105,7 @@ class Connector {
   component (name) {
     const component = get(this.components, name.replace(/\//g, '.'))
     if (!component) {
-      throw new Error(`Component "${name}" was not found`)
+      throw new GE.HttpException(`Connector "${name}" was not found`, 404)
     }
     if (component.mixins) {
       for (const index in component.mixins) {

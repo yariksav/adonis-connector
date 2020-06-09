@@ -9,9 +9,10 @@
 const Vue = require('vue')
 const debugreq = require('debug')('connector:request')
 const debugrsp = require('debug')('connector:response')
+const GE = require('@adonisjs/generic-exceptions')
 Vue.config.devtools = false
 Vue.config.productionTip = false
-Vue.config.silent = process.env.ENV_MODE === 'development'
+Vue.config.silent = process.env.NODE_ENV === 'production'
 
 const proxyHandler = {
   get (target, name) {
@@ -48,7 +49,7 @@ class Component {
     })
 
     if (!vm['$$' + action]) {
-      throw new Error(`Method ${action} doesn't exist`)
+      throw new GE.HttpException(`Method ${action} doesn't exist`, 404)
     }
     const res = await vm.$run(action, params)
     vm.$destroy()
